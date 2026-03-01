@@ -206,3 +206,18 @@ def create_balanced_sampler(dataset):
     print(f"Balanced sampler created with class counts min: {class_counts.min()}, max: {class_counts.max()}, mean: {class_counts.mean()}")
     return sampler
 
+def compute_class_weights(dataset):
+    if hasattr(dataset, 'dataset') and hasattr(dataset, 'indices'):
+        labels = [dataset.dataset.label_to_idx[idx] for idx in dataset.indices]
+    elif hasattr(dataset, 'datasets'):
+        labels = [dataset.dataset.label_to_idx[label] for label in dataset.indices]
+    else:
+        labels = dataset.label_to_idx
+    
+    class_counts = np.bincount(labels)
+    class_counts_safe = np.where(class_counts == 0, 1, class_counts)
+    epsilon = 1e-6
+    weights = 1.0 / (class_counts_safe + epsilon)
+    weights = weights / weights.sum() * len(class_counts)
+    
+    return torch.FloatTensor(weights)
