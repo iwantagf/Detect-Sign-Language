@@ -81,7 +81,7 @@ class Augmentation:
 
         frames = frames[:, top:top + new_H, left:left + new_W, :]
         
-        frames = frames.permute(0, 3, 1, 2) # (T, C, H, W)
+        frames = frames.permute(0, 3, 1, 2).float() # (T, C, H, W)
         frames = F.interpolate(frames, size=(H, W), mode='bilinear', align_corners=False)
         frames = frames.permute(0, 2, 3, 1) # (T, H, W, C)
         
@@ -174,9 +174,9 @@ class VideoDataset(Dataset):
         frames = frames[indices]
 
         if frames.shape[1] != 224 or frames.shape[2] != 224:
-            frames = frames.permute(0, 3, 1, 2) # (T, C, H, W)
+            frames = frames.permute(0, 3, 1, 2).float() # (T, C, H, W)
             frames = F.interpolate(frames, size=(224, 224), mode='bilinear', align_corners=False)
-            frames = frames.permute(0, 2, 3, 1) # (T, H, W, C)
+            frames = frames.permute(0, 2, 3, 1).to(torch.uint8) # (T, H, W, C)
 
         return frames
     

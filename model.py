@@ -59,11 +59,14 @@ class VitTransformer(nn.Module):
     # Input = (B, T, C, H, W) = (B, 16, 3, 244, 244)
     # Output = (B, num_classes)
 
-    def __init__(self, num_classes = 100):
+    def __init__(self, num_classes = 100, freeze_backbone = True):
         super().__init__()
 
         # ViT backbone 
         self.vitbackbone = VitBackbone()
+        if freeze_backbone:
+            for param in self.vitbackbone.parameters():
+                param.requires_grad = False
         
         # Positional Encoding
         self.pos_encoder = PositionalEncoding(

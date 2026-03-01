@@ -31,12 +31,13 @@ if __name__ == '__main__':
 
     balanced_sampler = dataset.create_balanced_sampler(train_dataset)
 
-    train_loader = DataLoader(train_dataset, batch_size = 16, sampler = balanced_sampler, collate_fn = dataset.collate_fn, num_workers = 4)
-    valid_loader = DataLoader(valid_dataset, batch_size = 16, shuffle = False, collate_fn = dataset.collate_fn, num_workers = 4)
+    train_loader = DataLoader(train_dataset, batch_size = 32, sampler = balanced_sampler, collate_fn = dataset.collate_fn, num_workers = 12)
+    valid_loader = DataLoader(valid_dataset, batch_size = 32, shuffle = False, collate_fn = dataset.collate_fn, num_workers = 12)
 
     model = model.VitTransformer(num_classes = 100)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = training.train_model(model, train_loader, valid_loader, num_epochs = 20, learning_rate = 1e-4, device = device)
+    model = model.to(device)
+    model = training.train_model(model, train_loader, valid_loader, num_epochs = 25, learning_rate = 1e-4, device = device)
 
     training.evaluate(model, 'dataset/public_test', 'dataset/label_mapping.pkl', 'public_test.csv', device, 'best_model.pth', TARGET_FPS)
     training.evaluate(model, 'dataset/private_test', 'dataset/label_mapping.pkl', 'prediction_test.csv', device, 'best_model.pth', TARGET_FPS)

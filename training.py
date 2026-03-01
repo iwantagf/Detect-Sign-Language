@@ -98,8 +98,8 @@ def validate(model, dataloader, criterion, device):
     return total_loss / len(dataloader), {'precision': precision * 100, 'recall': recall * 100, 'f1': f1 * 100}
 
 def train_model(model, train_loader, valid_loader, num_epochs = 20, learning_rate = 1e-4, device = 'cuda'):
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
+    optimizer = torch.optim.AdamW(filter(lambda p: p.requires_grad, model.parameters()), lr=learning_rate, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor = 0.5, patience = 3)
      
     best_f1 = 0
@@ -118,7 +118,7 @@ def train_model(model, train_loader, valid_loader, num_epochs = 20, learning_rat
             torch.save(model.state_dict(), 'best_model.pth')
             print("Best model saved")
         
-        scheduler.step()
+        scheduler.step(valid_loss)
     
     return model
 
