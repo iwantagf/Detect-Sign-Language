@@ -2,7 +2,7 @@
 This project is a deep learning model that can detect sign language from video. Inspired by the second problem in 2025 Northern Olympic AI Challenge.
 
 ### Dataset
-The dataset is from the 2025 Northern Olympic AI Challenge. It contains 100 classes of sign language videos. You can download from [here](drive.google.com/drive/folders/1X3xTeaI8keWD4c-cePjN-xboJGOgQ66A?usp=sharing).
+The dataset is from the 2025 Northern Olympic AI Challenge. It contains 100 classes of sign language videos. You can download from [here](https://drive.google.com/drive/folders/1X3xTeaI8keWD4c-cePjN-xboJGOgQ66A?usp=sharing).
 
 ### Data Preprocessing
 We fixed a sampling rate of 16 FPS for all videos. Then, we split the dataset into training and validation sets with a ratio of $80:20$. If a video has less than 16 frames, we will drop it, otherwise, we will randomly sample 16 frames from it.
