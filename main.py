@@ -31,8 +31,8 @@ if __name__ == '__main__':
 
     balanced_sampler = dataset.create_balanced_sampler(train_dataset)
 
-    train_loader = DataLoader(train_dataset, batch_size = 16, sampler = balanced_sampler, collate_fn = dataset.collate_fn)
-    valid_loader = DataLoader(valid_dataset, batch_size = 16, shuffle = False, collate_fn = dataset.collate_fn)
+    train_loader = DataLoader(train_dataset, batch_size = 16, sampler = balanced_sampler, collate_fn = dataset.collate_fn, num_workers = 4)
+    valid_loader = DataLoader(valid_dataset, batch_size = 16, shuffle = False, collate_fn = dataset.collate_fn, num_workers = 4)
 
     model = model.VitTransformer(num_classes = 100)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
