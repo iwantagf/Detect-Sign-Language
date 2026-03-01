@@ -1,4 +1,4 @@
-### Detect Sign Language
+# Detect Sign Language
 This project is a deep learning model that can detect sign language from video. Inspired by the second problem in 2025 Northern Olympic AI Challenge.
 
 ### Dataset
