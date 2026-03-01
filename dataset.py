@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import os
 import random
 import pickle
-
+import unicodedata
 def read_video(video_path: str):
     cap = cv2.VideoCapture(video_path)
     frames = []
@@ -124,7 +124,8 @@ class VideoDataset(Dataset):
         self.instances, self.labels, self.label_to_idx = [], [], []
 
         with open(label_to_idx_path, 'rb') as f:
-            self.label_mapping = pickle.load(f)
+            raw_label_mapping = pickle.load(f)
+            self.label_mapping = {unicodedata.normalize('NFC', k): v for k, v in raw_label_mapping.items()}
 
         for label_folder in sorted(os.listdir(root_dir))[:NUM_CLASSES]:
             label_path = os.path.join(root_dir, label_folder)
@@ -132,11 +133,13 @@ class VideoDataset(Dataset):
             if not os.path.isdir(label_path):
                 continue
             
+            normalized_label = unicodedata.normalize('NFC', label_folder)
+
             for video_file in os.listdir(label_path):
                 video_path = os.path.join(label_path, video_file)
                 self.instances.append(video_path)
                 self.labels.append(label_folder)
-                self.label_to_idx.append(self.label_mapping[label_folder])
+                self.label_to_idx.append(self.label_mapping[normalized_label])
         
     def __len__(self):
         return len(self.instances)
@@ -187,8 +190,12 @@ class VideoDataset(Dataset):
         return frames
 
 def create_balanced_sampler(dataset):
-    if hasattr(dataset, 'datasets'):
-        labels = [dataset.dataset.label_to_idx[label] for label in dataset.indices]
+    if hasattr(dataset, 'dataset') and hasattr(dataset, 'indices'):
+        # This handles torch.utils.data.Subset
+        labels = [dataset.dataset.label_to_idx[idx] for idx in dataset.indices]
+    elif hasattr(dataset, 'datasets'):
+        # This handles torch.utils.data.ConcatDataset
+        labels = [dataset.dataset.label_to_idx[label] for label in dataset.indices] # Note: This might still be buggy for ConcatDataset if used later, but fixes Subset
     else:
         labels = dataset.label_to_idx
     

@@ -12,7 +12,7 @@ if __name__ == '__main__':
     train_dataset = dataset.VideoDataset(root_dir = 'dataset/train', label_to_idx_path = 'dataset/label_mapping.pkl', 
                                         target_fps = TARGET_FPS, training = True)
 
-    valid_dataset = dataset.VideoDataset(root_dir = 'dataset/valid', label_to_idx_path = 'dataset/label_mapping.pkl',
+    valid_dataset = dataset.VideoDataset(root_dir = 'dataset/train', label_to_idx_path = 'dataset/label_mapping.pkl',
                                         target_fps = TARGET_FPS, training = False)
 
     # Split
@@ -31,8 +31,8 @@ if __name__ == '__main__':
 
     balanced_sampler = dataset.create_balanced_sampler(train_dataset)
 
-    train_loader = DataLoader(train_dataset, batch_size = 16, sampler = balanced_sampler, collate_fn = dataset.collate_fn, num_workers = 4)
-    valid_loader = DataLoader(valid_dataset, batch_size = 16, shuffle = False, collate_fn = dataset.collate_fn, num_workers = 4)
+    train_loader = DataLoader(train_dataset, batch_size = 16, sampler = balanced_sampler, collate_fn = dataset.collate_fn)
+    valid_loader = DataLoader(valid_dataset, batch_size = 16, shuffle = False, collate_fn = dataset.collate_fn)
 
     model = model.VitTransformer(num_classes = 100)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'

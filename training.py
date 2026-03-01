@@ -5,6 +5,7 @@ from dataset import read_video
 from dataset import collate_fn
 import numpy as np
 import torch
+import torch.nn as nn
 from torch.utils.data import DataLoader
 import pickle
 import os

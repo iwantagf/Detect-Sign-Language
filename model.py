@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.nn.functional as F
 import torch
 import timm
 import math
@@ -25,22 +26,20 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
     
 class AttentionPooling(nn.Module):
-    def __init__(self, input_dim, hidden_dim):
+    def __init__(self, dim):
         super().__init__()
 
         self.attention = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
+            nn.Linear(dim, dim // 4),
             nn.Tanh(),
-            nn.Linear(hidden_dim, 1)
+            nn.Linear(dim // 4, 1)
         )
 
     def forward(self, x):
-        # x = (B, T, D)
-        attn_weights = self.attention(x) # (B, T, 1)
-        attn_weights = torch.softmax(attn_weights, dim = 1) # (B, T, 1)
-
-        pooled = torch.sum(attn_weights * x, dim = 1) # (B, D)
-
+        # x: (B, T, dim)
+        attn_weights = self.attention(x)  # (B, T, 1)
+        attn_weights = F.softmax(attn_weights, dim=1)
+        pooled = torch.sum(attn_weights * x, dim=1)  # (B, dim)
         return pooled
 
 class VitBackbone(nn.Module):
