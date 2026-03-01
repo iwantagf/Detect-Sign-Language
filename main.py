@@ -37,7 +37,7 @@ if __name__ == '__main__':
     model = model.VitTransformer(num_classes = 100)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model = model.to(device)
-    model = training.train_model(model, train_loader, valid_loader, num_epochs = 25, learning_rate = 1e-4, device = device)
+    model = training.train_model(model, train_loader, valid_loader, num_epochs = 35, learning_rate = 1e-4, device = device)
 
     training.evaluate(model, 'dataset/public_test', 'dataset/label_mapping.pkl', 'public_test.csv', device, 'best_model.pth', TARGET_FPS)
     training.evaluate(model, 'dataset/private_test', 'dataset/label_mapping.pkl', 'prediction_test.csv', device, 'best_model.pth', TARGET_FPS)
