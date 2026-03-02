@@ -13,7 +13,7 @@ The model uses Vision Transformer (ViT) as backbone to extract features from vid
 ### Training
 Training with AdamW optimizer and Weighted Cross Entropy Loss in which labels with less samples have higher weights. The model is trained for $35$ epochs with batch size $32$ and learning rate $10^{-4}$ and macro-F1 for validation. This metric is good for imbalanced dataset where every label has equal weight. You can see that the distribution of the given dataset has a long tail. You can see it by running `python distribution.py`. 
 
-F1-macro on validation set is about $0.9218$ within 1 hour on G4 GPU.
+F1-macro on validation set is about $0.86174$ within 1 hour on G4 GPU.
 
 
 ### Augmentation
