@@ -11,7 +11,7 @@ We fixed a sampling rate of 16 FPS for all videos. Then, we split the dataset in
 The model uses Vision Transformer (ViT) as backbone to extract features from video frames. Then, it uses a Transformer encoder along with Positional Encoding and Attention Pooling to classify the sign language.
 
 ### Training
-Training with AdamW optimizer and Weighted Cross Entropy Loss in which labels with less samples have higher weights. The model is trained for $35$ epochs with batch size $32$ and learning rate $10^{-4}$ and macro-F1 for validation. This metric is good for imbalanced dataset where every label has equal weight. You can see that the distribution of the given dataset has a long tail. You can see it by running `python distribution.py`. 
+Training with AdamW optimizer and Weighted Cross Entropy Loss in which labels with less samples have higher weights. The model is trained for $35$ epochs with batch size $32$ and learning rate $10^{-4}$ and macro-F1 for validation. This metric is good for imbalanced dataset where every label has equal weight. You can see that the distribution of the given dataset has a long tail. Running `python distribution.py` for more precise details. 
 
 F1-macro is about $0.86174$ within 1 hour on G4 GPU.
 
